@@ -1,34 +1,70 @@
 document.addEventListener('DOMContentLoaded', function () {
-    let currentPage = 1; // Página inicial
-    const pageSize = 5; // Número de productos por página
-    const baseUrl = 'http://localhost:3000/products/page/slider'; // URL de la API del servidor backend
-    const numerito = document.getElementById('numerito');
+    // let currentPage = 1; // Página inicial
+    // const pageSize = 5; // Número de productos por página
+    // const baseUrl = 'http://localhost:3000/products/page/slider'; // URL de la API del servidor backend
+    // const numerito = document.getElementById('numerito');
 
     // Array para almacenar productos en el carrito
     let productosEnCarrito = JSON.parse(window.localStorage.getItem("productos-en-carrito")) || [];
     let productos = []; // Variable para almacenar los productos obtenidos del backend
 
-    // Función para obtener productos desde el backend
-    async function fetchProducts(page) {
-        try {
-            const response = await fetch(`${baseUrl}?page=${page - 1}&size=${pageSize}`);
-            if (!response.ok) {
-                throw new Error('Error al obtener productos del backend');
-            }
-            const data = await response.json();
 
-            // Actualizar productos y renderizar en el slider
-            productos = data.content; // Guardamos los productos en la variable global
-            renderProducts(data.content);
 
-            // Actualizar estado de los botones de paginación
-            document.getElementById('prev-btn').disabled = page === 1;
-            document.getElementById('next-btn').disabled = page >= data.totalPages;
 
-        } catch (error) {
-            console.error('Error al obtener productos:', error);
-        }
-    }
+   //TESTING---------------------------------U//
+
+   let currentPage = 1;
+   const pageSize = 5;  // Número de productos por página
+
+   // Función para obtener productos
+   async function fetchProducts(page) {
+       try {
+           const response = await fetch(`http://localhost:3000/api/products/slider?page=${page}&pageSize=${pageSize}`);
+           if (!response.ok) {
+               throw new Error('Error al obtener los productos');
+           }
+           const data = await response.json();
+
+           // Renderizar los productos en el slider
+           const slider = document.getElementById('product-slider');
+           slider.innerHTML = '';  // Limpiar el contenido previo
+
+           if (data.products.length === 0) {
+               slider.innerHTML = '<p>No hay productos disponibles.</p>';
+           } else {
+               data.products.forEach(product => {
+                   const productDiv = document.createElement('div');
+                   productDiv.innerHTML = `
+                       <h3>${product.name}</h3>
+                       <img src="${product.img}" alt="${product.name}">
+                       <p>${product.description}</p>
+                       <p><strong>Precio:</strong> $${product.price}</p>
+                       <p><strong>Stock:</strong> ${product.stock} unidades</p>
+                   `;
+                   slider.appendChild(productDiv);
+               });
+           }
+
+           // Manejar botones de paginación
+           document.getElementById('prev-btn').disabled = currentPage === 1;
+           document.getElementById('next-btn').disabled = currentPage >= data.totalPages; // Asegura que no se pase del total de páginas
+       } catch (error) {
+           console.error('Error:', error);
+       }
+   }
+   
+
+
+
+
+   //fin test-----------------------///
+
+
+
+
+
+
+  
 
     // Función para renderizar los productos en el slider
     function renderProducts(products) {
