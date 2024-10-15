@@ -6,6 +6,8 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 const cartRoutes = require('./routes/cartRoutes');
+const galleryRoutes = require('./routes/galleryRoutes');
+
 
 // Middleware para habilitar CORS
 app.use(cors()); // Permite todas las solicitudes CORS
@@ -14,6 +16,7 @@ app.use(express.json());
 
 app.use('/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
+app.use('/gallery',galleryRoutes);
 app.use('/users', userRoutes);
 app.use('/cart', cartRoutes);
 
