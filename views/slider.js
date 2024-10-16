@@ -1,75 +1,98 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // let currentPage = 1; // Página inicial
-    // const pageSize = 5; // Número de productos por página
-    // const baseUrl = 'http://localhost:3000/products/page/slider'; // URL de la API del servidor backend
-    // const numerito = document.getElementById('numerito');
-
-    // Array para almacenar productos en el carrito
+    // Variables
     let productosEnCarrito = JSON.parse(window.localStorage.getItem("productos-en-carrito")) || [];
-    let productos = []; // Variable para almacenar los productos obtenidos del backend
+    let productos = []; // Almacena los productos obtenidos del backend
+    let currentPage = 1;
+    const pageSize = 5;
+    const numerito = document.getElementById('numerito');
 
+    // Función para obtener productos desde el backend
+    async function fetchProducts(page) {
+        try {
+            const response = await fetch(`http://localhost:3000/api/products/slider?page=${page}&pageSize=${pageSize}`);
+            if (!response.ok) throw new Error('Error al obtener los productos');
+            const data = await response.json();
 
+            // Renderizar los productos en el slider
+            renderProducts(data.products);
 
+            // Manejar botones de paginación
+            document.getElementById('prev-btn').disabled = currentPage === 1;
+            document.getElementById('next-btn').disabled = currentPage >= data.totalPages;
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
-   //TESTING---------------------------------U//
+    // Función para obtener todos los productos desde el backend
+    async function getAllProducts() {
+        try {
+            const response = await fetch('http://localhost:3000/api/products/getall');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const products = await response.json();
 
-   let currentPage = 1;
-   const pageSize = 5;  // Número de productos por página
+            productos = products; // Guardar los productos
+            displayProducts(products);
+            renderProducts(products);
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        }
+    }
 
-   // Función para obtener productos
-   async function fetchProducts(page) {
-       try {
-           const response = await fetch(`http://localhost:3000/api/products/slider?page=${page}&pageSize=${pageSize}`);
-           if (!response.ok) {
-               throw new Error('Error al obtener los productos');
-           }
-           const data = await response.json();
+    // Mostrar los productos en la lista general
+    function displayProducts(products) {
+        const productsContainer = document.getElementById('products-container');
+        productsContainer.innerHTML = '';
 
-           // Renderizar los productos en el slider
-           const slider = document.getElementById('product-slider');
-           slider.innerHTML = '';  // Limpiar el contenido previo
+        if (!products || products.length === 0) {
+            productsContainer.innerHTML = '<p>No se encontraron productos.</p>';
+            return;
+        }
 
-           if (data.products.length === 0) {
-               slider.innerHTML = '<p>No hay productos disponibles.</p>';
-           } else {
-               data.products.forEach(product => {
-                   const productDiv = document.createElement('div');
-                   productDiv.innerHTML = `
-                       <h3>${product.name}</h3>
-                       <img src="${product.img}" alt="${product.name}">
-                       <p>${product.description}</p>
-                       <p><strong>Precio:</strong> $${product.price}</p>
-                       <p><strong>Stock:</strong> ${product.stock} unidades</p>
-                   `;
-                   slider.appendChild(productDiv);
-               });
-           }
+        products.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.classList.add('product-card');
+            productCard.innerHTML = `
+                <div class="card-product">
+                    <div class="container-img">
+                        <img src="${product.img}" alt="Producto">
+                        <span class="discount">-13%</span>
+                        <div class="button-group">
+                            <span><i class="fa-solid fa-eye"></i></span>
+                            <span><i class="fa-regular fa-heart"></i></span>
+                            <span><i class="fa-solid fa-code-compare"></i></span>
+                        </div>
+                    </div>
+                    <div class="content-card-product">
+                        <div class="stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-regular fa-star"></i>
+                        </div>
+                        <h3>${product.name}</h3>
+                        <button class="add-cart" id="${product.id_product}">
+                            <i class="fa-solid fa-basket-shopping"></i>
+                        </button>
+                        <p class="price">$${product.price} <span></span></p>
+                        <p class="stock">${product.stock} en stock</p>
+                    </div>
+                </div>
+            `;
 
-           // Manejar botones de paginación
-           document.getElementById('prev-btn').disabled = currentPage === 1;
-           document.getElementById('next-btn').disabled = currentPage >= data.totalPages; // Asegura que no se pase del total de páginas
-       } catch (error) {
-           console.error('Error:', error);
-       }
-   }
-   
+            productsContainer.appendChild(productCard);
 
+            productCard.querySelector('.add-cart').addEventListener('click', () => {
+                agregarAlCarrito(product.id_product);
+            });
+        });
+    }
 
-
-
-   //fin test-----------------------///
-
-
-
-
-
-
-  
-
-    // Función para renderizar los productos en el slider
+    // Renderizar los productos en el slider
     function renderProducts(products) {
         const slider = document.getElementById('product-slider');
-        slider.innerHTML = ''; // Limpiar el contenido previo
+        slider.innerHTML = '';
 
         if (!products || products.length === 0) {
             slider.innerHTML = '<p>No se encontraron productos.</p>';
@@ -85,33 +108,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 <p>${product.description}</p>
                 <p><strong>Precio:</strong> $${product.price}</p>
                 <p><strong>Stock:</strong> ${product.stock} unidades</p>
-                <button class="add-cart" id="${product.id}">
+                <button class="add-cart" id="${product.id_product}">
                     <i class="fa-solid fa-basket-shopping"></i> Agregar al carrito
                 </button>
             `;
             slider.appendChild(productDiv);
 
-            // Agregar evento click para agregar al carrito
-            productDiv.querySelector('.add-cart').addEventListener('click', function(e) {
-                e.preventDefault();
-                agregarAlCarrito(e);
+            productDiv.querySelector('.add-cart').addEventListener('click', () => {
+                agregarAlCarrito(product.id_product);
             });
         });
     }
 
-    // Función para agregar productos al carrito
-    function agregarAlCarrito(e) {
-        const idBoton = parseInt(e.currentTarget.id, 10);
-        const productoAgregado = productos.find(producto => producto.id === idBoton);
+    // Función para agregar al carrito
+    function agregarAlCarrito(productId) {
+        const productoAgregado = productos.find(producto => producto.id_product === productId);
 
         if (productoAgregado) {
-            const productoEnCarrito = productosEnCarrito.find(producto => producto.id === idBoton);
+            const productoEnCarrito = productosEnCarrito.find(producto => producto.id_product === productId);
 
             if (productoEnCarrito) {
-                // Si el producto ya está en el carrito, aumentar la cantidad
                 productoEnCarrito.sold++;
             } else {
-                // Si el producto no está en el carrito, agregarlo con una cantidad inicial de 1
                 productoAgregado.sold = 1;
                 productosEnCarrito.push(productoAgregado);
             }
@@ -119,22 +137,22 @@ document.addEventListener('DOMContentLoaded', function () {
             saveLocalCarrito();
             actualizarNumerito();
         } else {
-            console.error(`Producto con ID ${idBoton} no encontrado`);
+            console.error(`Producto con ID ${productId} no encontrado`);
         }
     }
 
-    // Función para guardar el carrito en localStorage
+    // Guardar el carrito en localStorage
     const saveLocalCarrito = () => {
         localStorage.setItem("productos-en-carrito", JSON.stringify(productosEnCarrito));
     };
 
-    // Función para actualizar el número de productos en el carrito
+    // Actualizar el número de productos en el carrito
     function actualizarNumerito() {
         let nuevoNumerito = productosEnCarrito.reduce((acc, producto) => acc + producto.sold, 0);
         numerito.innerText = nuevoNumerito;
     }
 
-    // Controladores de eventos para los botones "Anterior" y "Siguiente"
+    // Botones de paginación
     document.getElementById('prev-btn').addEventListener('click', () => {
         if (currentPage > 1) {
             currentPage--;
@@ -147,6 +165,7 @@ document.addEventListener('DOMContentLoaded', function () {
         fetchProducts(currentPage);
     });
 
-    // Cargar la primera página al inicio
+    // Cargar la primera página y todos los productos al inicio
     fetchProducts(currentPage);
+    getAllProducts();
 });
