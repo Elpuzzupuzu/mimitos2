@@ -1,16 +1,24 @@
 // Verificar si el usuario está autenticado
-const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-if (!userInfo) {
-    // Si el usuario no está autenticado, eliminar userCart y productos-en-carrito de localStorage
-    localStorage.removeItem('userCart');
-    localStorage.removeItem('productos-en-carrito');
+// const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+// if (!userInfo) {
+//     // Si el usuario no está autenticado, eliminar userCart y productos-en-carrito de localStorage
+//     localStorage.removeItem('userCart');
+//     localStorage.removeItem('productos-en-carrito');
     
-    // Redirigir a la página de inicio de sesión
-    window.location.href = 'login.html';
-}
+//     // Redirigir a la página de inicio de sesión
+//     window.location.href = 'login.html';
+// }
 
 // Continuar con el resto del código solo si el usuario está autenticado
+
+//---------------------------AQUI SE OBTIENE EL CARRITO DE LA COMPRA ACTUAL----------------------------------------------//
+
+
 const productosEncarrito = JSON.parse(localStorage.getItem("productos-en-carrito"));
+
+
+//---------------------------------------------------------------------------------//
+
 console.log(productosEncarrito);
 
 const contenedorCarritoVacio = document.querySelector("#carrito-vacio");
@@ -108,8 +116,16 @@ botonComprar.addEventListener("click", comprarCarrito);
 // Botón comprar carrito
 botonComprar.addEventListener("click", comprarCarrito);
 
+
+
+///  ESTA ES LA LOGICA QUE FALTA POR ACTUALIZAR
+
+/// la logica a solucionar es obtener el carrito y crearlo uno a cada usuario 
+
+
+
 async function comprarCarrito() {
-    const userCart = JSON.parse(localStorage.getItem('userCart'));
+    const userCart = JSON.parse(localStorage.getItem('userCart'));  //<----- aqui vamos a trabajar 
     if (!userCart || !userCart.cartId) {
         console.error('No se encontró el ID del carrito en localStorage');
         alert('Hubo un problema al obtener el ID del carrito. Por favor, intenta más tarde.');

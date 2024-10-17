@@ -29,6 +29,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
             ///comenzamos pruebas
             
+            
 
             // Almacenar en localStorage
             localStorage.setItem('userInfo', JSON.stringify(userInfo));

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Función para obtener productos desde el backend
     async function fetchProducts(page) {
         try {
-            const response = await fetch(`http://localhost:3000/api/products/slider?page=${page}&pageSize=${pageSize}`);
+            const response = await fetch(`https://mimitos.onrender.com/api/products/slider?page=${page}&pageSize=${pageSize}`);
             if (!response.ok) throw new Error('Error al obtener los productos');
             const data = await response.json();
 
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Función para obtener todos los productos desde el backend
     async function getAllProducts() {
         try {
-            const response = await fetch('http://localhost:3000/api/products/getall');
+            const response = await fetch('https://mimitos.onrender.com/api/products/getall');
             if (!response.ok) throw new Error('Network response was not ok');
             const products = await response.json();
 

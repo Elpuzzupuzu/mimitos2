@@ -11,7 +11,28 @@ const orderRoutes = require ('./routes/orderRoutes');
 
 
 // Middleware para habilitar CORS
-app.use(cors()); // Permite todas las solicitudes CORS
+// app.use(cors()); // Permite todas las solicitudes CORS
+
+
+// Configuración de CORS
+const allowedOrigins = [
+    'http://127.0.0.1:5500',
+    'https://elpuzzupuzu.github.io'
+  ];
+  
+  app.use(cors({
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT'],
+    credentials: true
+  }));
+
+
+
+
+
+
+
+
 
 app.use(express.json());
 
