@@ -2,7 +2,7 @@ let productos = []; // Almacena los productos obtenidos del backend
 async function getAllProducts() {
 
     try {
-        const response = await fetch('http://localhost:3000/api/products/getall');
+        const response = await fetch('https://mimitos.onrender.com/api/products/getall');
         if (!response.ok) throw new Error('Network response was not ok');
         const products = await response.json();
 
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function fetchProducts(page) {
         try {
-            const response = await fetch(`http://localhost:3000/api/products/slider?page=${page}&pageSize=${pageSize}`);
+            const response = await fetch(`https://mimitos.onrender.com/api/products/slider?page=${page}&pageSize=${pageSize}`);
             if (!response.ok) throw new Error('Error al obtener los productos');
             const data = await response.json();
 
@@ -56,20 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Función para obtener todos los productos desde el backend
-    // async function getAllProducts() {
-    //     try {
-    //         const response = await fetch('http://localhost:3000/api/products/getall');
-    //         if (!response.ok) throw new Error('Network response was not ok');
-    //         const products = await response.json();
 
-    //         productos = products; // Guardar los productos
-    //         //displayProducts(products);    <<<------LOGICA QUE SE ESTA TESTEANDO DEL SLIDER
-    //         renderProducts(products);
-    //     } catch (error) {
-    //         console.error('Error fetching products:', error);
-    //     }
-    // }
 
   
 
@@ -117,27 +104,21 @@ document.addEventListener('DOMContentLoaded', function () {
                         <p class="stock">${product.stock} en stock</p>
                     </div>
                 </div>
-
-
-
-               
-                
+    
             `;
             slider.appendChild(productDiv);
 
             productDiv.querySelector('.add-cart').addEventListener('click', () => {
                 agregarAlCarrito(product.id_product);
             });
-
-            
-
         });
 
     }
 
 
 
-        // PARTE LOGICA DEL CARRITO //
+    
+    // PARTE LOGICA DEL CARRITO //
 
 
 

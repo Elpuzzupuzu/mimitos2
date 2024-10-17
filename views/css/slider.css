@@ -16,9 +16,14 @@ h1 {
     justify-content: center;
 }
 
+/* .container-img img{
+    height: 40px;
+
+} */
+
 .product-card {
     background-color: white;
-    border: 1px solid #ccc;
+    border: 1px solid #810f7f;
     border-radius: 5px;
     width: 200px;
     padding: 15px;
