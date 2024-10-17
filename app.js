@@ -7,6 +7,7 @@ const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const galleryRoutes = require('./routes/galleryRoutes');
+const orderRoutes = require ('./routes/orderRoutes');
 
 
 // Middleware para habilitar CORS
@@ -19,6 +20,8 @@ app.use('/api/products', productRoutes);
 app.use('/gallery',galleryRoutes);
 app.use('/users', userRoutes);
 app.use('/cart', cartRoutes);
+app.use('/api', orderRoutes);
+
 
 sequelize.sync()
     .then(() => {

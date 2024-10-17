@@ -22,16 +22,34 @@ exports.register = async (req, res) => {
     }
 };
 
-// Función para login de usuario
+
+
+
+// // Función para login de usuario
+// exports.login = async (req, res) => {
+//     try {
+//         const { user_name, password } = req.body;
+
+//         // Llama al servicio para autenticar al usuario
+//         const token = await userService.loginUser(user_name, password);
+
+//         // Enviar el token JWT al cliente
+//         res.json({ accessToken: token });
+//     } catch (error) {
+//         res.status(500).json({ message: 'Error en el servidor', error: error.message });
+//     }
+// };
+
+
 exports.login = async (req, res) => {
     try {
         const { user_name, password } = req.body;
 
         // Llama al servicio para autenticar al usuario
-        const token = await userService.loginUser(user_name, password);
+        const { token, id_user } = await userService.loginUser(user_name, password);
 
-        // Enviar el token JWT al cliente
-        res.json({ accessToken: token });
+        // Enviar el token JWT y el id_user al cliente
+        res.json({ accessToken: token, id_user });
     } catch (error) {
         res.status(500).json({ message: 'Error en el servidor', error: error.message });
     }

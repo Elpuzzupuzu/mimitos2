@@ -10,14 +10,15 @@ document.getElementById('loginForm').addEventListener('submit', async function (
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ user_name: user_name, password: password }) // Enviar user_name en lugar de email
+            body: JSON.stringify({ user_name: user_name, password: password }) // Enviar user_name y password
         });
 
         const data = await response.json();
 
         if (response.ok) {
-            // Guardar el token en localStorage
-            localStorage.setItem('accessToken', data.accessToken);
+            // Guardar el token y el id_user en localStorage
+            localStorage.setItem('accessToken', data.accessToken); // Guardar el token
+            localStorage.setItem('id_user', data.id_user); // Guardar el id_user
 
             // Redirigir a la página principal (index.html)
             window.location.href = './index.html';
