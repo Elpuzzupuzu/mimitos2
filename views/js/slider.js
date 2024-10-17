@@ -1,9 +1,25 @@
+let productos = []; // Almacena los productos obtenidos del backend
+async function getAllProducts() {
+
+    try {
+        const response = await fetch('http://localhost:3000/api/products/getall');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const products = await response.json();
+
+        productos = products; // Guardar los productos
+        //displayProducts(products);    <<<------LOGICA QUE SE ESTA TESTEANDO DEL SLIDER
+    } catch (error) {
+        console.error('Error fetching products:', error);
+    }
+}
+
+getAllProducts();
+
 document.addEventListener('DOMContentLoaded', function () {
     // Variables
     let productosEnCarrito = JSON.parse(window.localStorage.getItem("productos-en-carrito")) || [];
-    let productos = []; // Almacena los productos obtenidos del backend
     let currentPage = 1;
-    const pageSize = 5;
+    const pageSize = 4;
     const numerito = document.getElementById('numerito');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
@@ -17,14 +33,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Función para obtener productos desde el backend
+
     async function fetchProducts(page) {
         try {
             const response = await fetch(`http://localhost:3000/api/products/slider?page=${page}&pageSize=${pageSize}`);
             if (!response.ok) throw new Error('Error al obtener los productos');
             const data = await response.json();
 
+
+
+
             // Renderizar los productos en el slider
             renderProducts(data.products);
+          
+
 
             // Manejar botones de paginación
             prevBtn.disabled = currentPage === 1;
@@ -35,34 +57,40 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Función para obtener todos los productos desde el backend
-    async function getAllProducts() {
-        try {
-            const response = await fetch('http://localhost:3000/api/products/getall');
-            if (!response.ok) throw new Error('Network response was not ok');
-            const products = await response.json();
+    // async function getAllProducts() {
+    //     try {
+    //         const response = await fetch('http://localhost:3000/api/products/getall');
+    //         if (!response.ok) throw new Error('Network response was not ok');
+    //         const products = await response.json();
 
-            productos = products; // Guardar los productos
-            displayProducts(products);
-            renderProducts(products);
-        } catch (error) {
-            console.error('Error fetching products:', error);
-        }
-    }
+    //         productos = products; // Guardar los productos
+    //         //displayProducts(products);    <<<------LOGICA QUE SE ESTA TESTEANDO DEL SLIDER
+    //         renderProducts(products);
+    //     } catch (error) {
+    //         console.error('Error fetching products:', error);
+    //     }
+    // }
 
-    // Mostrar los productos en la lista general
-    function displayProducts(products) {
-        productsContainer.innerHTML = '';
+  
+
+    
+
+    // Renderizar los productos en el slider
+
+    
+    function renderProducts(products) {
+        slider.innerHTML = '';
 
         if (!products || products.length === 0) {
-            productsContainer.innerHTML = '<p>No se encontraron productos.</p>';
+            slider.innerHTML = '<p>No se encontraron productos.</p>';
             return;
         }
 
         products.forEach(product => {
-            const productCard = document.createElement('div');
-            productCard.classList.add('product-card');
-            productCard.innerHTML = `
-                <div class="card-product">
+            const productDiv = document.createElement('div');
+            productDiv.classList.add('product-item');
+            productDiv.innerHTML = `
+                        <div class="card-product">
                     <div class="container-img">
                         <img src="${product.img}" alt="Producto">
                         <span class="discount">-13%</span>
@@ -89,44 +117,30 @@ document.addEventListener('DOMContentLoaded', function () {
                         <p class="stock">${product.stock} en stock</p>
                     </div>
                 </div>
-            `;
-            productsContainer.appendChild(productCard);
 
-            productCard.querySelector('.add-cart').addEventListener('click', () => {
-                agregarAlCarrito(product.id_product);
-            });
-        });
-    }
 
-    // Renderizar los productos en el slider
-    function renderProducts(products) {
-        slider.innerHTML = '';
 
-        if (!products || products.length === 0) {
-            slider.innerHTML = '<p>No se encontraron productos.</p>';
-            return;
-        }
-
-        products.forEach(product => {
-            const productDiv = document.createElement('div');
-            productDiv.classList.add('product-item');
-            productDiv.innerHTML = `
-                <h3>${product.name}</h3>
-                <img src="${product.img}" alt="${product.name}">
-                <p>${product.description}</p>
-                <p><strong>Precio:</strong> $${product.price}</p>
-                <p><strong>Stock:</strong> ${product.stock} unidades</p>
-                <button class="add-cart" id="${product.id_product}">
-                    <i class="fa-solid fa-basket-shopping"></i> Agregar al carrito
-                </button>
+               
+                
             `;
             slider.appendChild(productDiv);
 
             productDiv.querySelector('.add-cart').addEventListener('click', () => {
                 agregarAlCarrito(product.id_product);
             });
+
+            
+
         });
+
     }
+
+
+
+        // PARTE LOGICA DEL CARRITO //
+
+
+
 
     // Función para agregar al carrito
     function agregarAlCarrito(productId) {
@@ -175,5 +189,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Cargar la primera página y todos los productos al inicio
     fetchProducts(currentPage);
-    getAllProducts();
+    // getAllProducts();  <----- la logica de esto debe estar aparte :)
 });
