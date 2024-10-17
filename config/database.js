@@ -28,4 +28,6 @@ sequelize
     console.error('Error al conectar a la base de datos:', err);
   });
 
+  //hola
+
 module.exports = sequelize;
