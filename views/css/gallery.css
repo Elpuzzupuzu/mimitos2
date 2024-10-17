@@ -23,6 +23,7 @@
 }
 
 .slide img {
+  
     width: 100%; /* Ancho al 100% del contenedor */
     height: 100%; /* Altura al 100% del contenedor */
     object-fit: contain; /* Ajusta la imagen dentro del slide sin  */

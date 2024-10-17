@@ -27,6 +27,91 @@ h1 {
     text-align: center;
 }
 
+
+
+
+.heading-1 {
+    font-size: 50px; /* Tamaño del texto */
+    font-family: 'Arial', sans-serif; /* Estilo de la fuente */
+    font-weight: bold; /* Fuente más gruesa */
+    color: #ffffff; /* Color del texto en blanco */
+    text-shadow: 
+        0 0 5px #ffffff,   /* Brillo sutil en blanco */
+        0 0 10px #ffffff,  /* Brillo medio en blanco */
+        0 0 15px #ffffff;  /* Brillo más fuerte en blanco */
+    animation: flicker 1.5s infinite alternate, color-change 3s infinite alternate; /* Animaciones */
+}
+
+@keyframes flicker {
+    0%, 100% {
+        opacity: 1; /* Totalmente visible */
+    }
+    50% {
+        opacity: 0.7; /* Disminuye la opacidad para simular parpadeo */
+    }
+}
+
+@keyframes color-change {
+    0% {
+        color: #ffff00; /* Amarillo */
+        text-shadow: 
+            0 0 5px #ffff00,   
+            0 0 10px #ffff00,  
+            0 0 15px #ffff00,  
+            0 0 20px #ff5733,  /* Naranja */
+            0 0 30px #ff5733,  
+            0 0 40px #ff5733;  
+    }
+    25% {
+        color: #ff5733; /* Naranja */
+        text-shadow: 
+            0 0 5px #ff5733,   
+            0 0 10px #ff5733,  
+            0 0 15px #ff5733,  
+            0 0 20px #2196F3,  /* Azul fuerte */
+            0 0 30px #2196F3,  
+            0 0 40px #2196F3;  
+    }
+    50% {
+        color: #2196F3; /* Azul fuerte */
+        text-shadow: 
+            0 0 5px #2196F3,   
+            0 0 10px #2196F3,  
+            0 0 15px #2196F3,  
+            0 0 20px #ffff00,  
+            0 0 30px #ffff00,  
+            0 0 40px #ffff00;  
+    }
+    75% {
+        color: #ffff00; /* Amarillo */
+        text-shadow: 
+            0 0 5px #ffff00,   
+            0 0 10px #ffff00,  
+            0 0 15px #ffff00,  
+            0 0 20px #ff5733,  
+            0 0 30px #ff5733,  
+            0 0 40px #ff5733;  
+    }
+    100% {
+        color: #ffff00; /* Amarillo */
+        text-shadow: 
+            0 0 5px #ffff00,   
+            0 0 10px #ffff00,  
+            0 0 15px #ffff00,  
+            0 0 20px #ff5733,  
+            0 0 30px #ff5733,  
+            0 0 40px #ff5733;  
+    }
+}
+
+
+
+
+
+
+
+
+
 .product-card h3 {
     margin: 10px 0;
     font-size: 1.2em;
@@ -80,7 +165,7 @@ h1 {
 
 :root{
     --primary-color: #e64090;
-    --background-color: #d1b2c1;
+    --background-color: #ffc4f5;   /* color princi  */
     --dark-color: #151515;
 
   
@@ -622,9 +707,9 @@ html{
 }
 /* tarjeta de prodcutos  */
 .card-product{
-    background-color: #d4d8ce;
+    background-color: #ecee45;   /*  ESTE ES EL FONDO DE LOS PRODCUCTOS DEL SLIDER*/
     padding: 2rem 3rem;
-    border-radius: 1rem;
+    border-radius: 5rem;
     cursor: pointer;
     box-shadow: 0 0 2px rgba(0, 0, 0, 1);
 }
