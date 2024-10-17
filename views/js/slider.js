@@ -5,11 +5,21 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentPage = 1;
     const pageSize = 5;
     const numerito = document.getElementById('numerito');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const productsContainer = document.getElementById('products-container');
+    const slider = document.getElementById('product-slider');
+
+    // Asegurarte que los elementos existan antes de manipularlos
+    if (!numerito || !prevBtn || !nextBtn || !productsContainer || !slider) {
+        console.error('Algunos elementos del DOM no se encontraron.');
+        return;
+    }
 
     // Función para obtener productos desde el backend
     async function fetchProducts(page) {
         try {
-            const response = await fetch(`https://mimitos.onrender.com/api/products/slider?page=${page}&pageSize=${pageSize}`);
+            const response = await fetch(`http://localhost:3000/api/products/slider?page=${page}&pageSize=${pageSize}`);
             if (!response.ok) throw new Error('Error al obtener los productos');
             const data = await response.json();
 
@@ -17,8 +27,8 @@ document.addEventListener('DOMContentLoaded', function () {
             renderProducts(data.products);
 
             // Manejar botones de paginación
-            document.getElementById('prev-btn').disabled = currentPage === 1;
-            document.getElementById('next-btn').disabled = currentPage >= data.totalPages;
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage >= data.totalPages;
         } catch (error) {
             console.error('Error:', error);
         }
@@ -27,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Función para obtener todos los productos desde el backend
     async function getAllProducts() {
         try {
-            const response = await fetch('https://mimitos.onrender.com/api/products/getall');
+            const response = await fetch('http://localhost:3000/api/products/getall');
             if (!response.ok) throw new Error('Network response was not ok');
             const products = await response.json();
 
@@ -41,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Mostrar los productos en la lista general
     function displayProducts(products) {
-        const productsContainer = document.getElementById('products-container');
         productsContainer.innerHTML = '';
 
         if (!products || products.length === 0) {
@@ -72,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <i class="fa-regular fa-star"></i>
                         </div>
                         <h3>${product.name}</h3>
+                      
                         <button class="add-cart" id="${product.id_product}">
                             <i class="fa-solid fa-basket-shopping"></i>
                         </button>
@@ -80,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 </div>
             `;
-
             productsContainer.appendChild(productCard);
 
             productCard.querySelector('.add-cart').addEventListener('click', () => {
@@ -91,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Renderizar los productos en el slider
     function renderProducts(products) {
-        const slider = document.getElementById('product-slider');
         slider.innerHTML = '';
 
         if (!products || products.length === 0) {
@@ -153,14 +161,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Botones de paginación
-    document.getElementById('prev-btn').addEventListener('click', () => {
+    prevBtn.addEventListener('click', () => {
         if (currentPage > 1) {
             currentPage--;
             fetchProducts(currentPage);
         }
     });
 
-    document.getElementById('next-btn').addEventListener('click', () => {
+    nextBtn.addEventListener('click', () => {
         currentPage++;
         fetchProducts(currentPage);
     });
